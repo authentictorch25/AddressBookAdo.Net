@@ -7,7 +7,8 @@ namespace AddressBookAdo.net
         static void Main(string[] args)
         {
 
-            AddressBookRepository.GetContactByCityOrState("Waidhan", "MadhyaPradesh");
+            AddressBookRepository.GetCountOfContactInCityOrState();
+
 
 
         }

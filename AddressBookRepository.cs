@@ -240,5 +240,54 @@ namespace AddressBookAdo.net
                     connection.Close();
             }
         }
+        /// <summary>
+        /// Gets the number of contact in city or state
+        /// </summary>
+        /// <exception cref="Exception"></exception>
+        public static void GetCountOfContactInCityOrState()
+        {
+            Console.WriteLine("Enter:\n1.count by city\n2count by state");
+            int choice = Convert.ToInt32(Console.ReadLine());
+            string query;
+            if (choice == 1)
+            { query = $@"select city,count(city) as PeopleInCity from AddressBook group by City";}
+            else
+            { query = $@"select state,count(state) as PeopleInCity from AddressBook group by State"; }
+            
+            DBConnection dbc = new DBConnection();
+            connection = dbc.GetConnection();
+            try
+            {
+                using (connection)
+                {
+                    SqlCommand command = new SqlCommand(query, connection);
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            string CityorState = reader[0].ToString();
+                            int count = reader.GetInt32(1);
+                            Console.WriteLine($"City/State:{CityorState}\nnumOfContacts:{count}\n");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("No Data found");
+                    }
+                    reader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                if (connection.State.Equals("Open"))
+                    connection.Close();
+            }
+        }
     }
 }
