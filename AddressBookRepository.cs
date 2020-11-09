@@ -9,7 +9,7 @@ namespace AddressBookAdo.net
     public class AddressBookRepository
     {
         //Initialising connection variable to store connection for each function
-         public static SqlConnection connection { get; set; }
+        public static SqlConnection connection { get; set; }
         /// <summary>
         /// Gets all contacts.
         /// </summary>
@@ -128,6 +128,43 @@ namespace AddressBookAdo.net
                 {
                     connection.Open();
                     string query = $@"update dbo.AddressBook set address='{address}' where first_name='{firstName}' and last_name='{lastName}'";
+                    SqlCommand command = new SqlCommand(query, connection);
+                    var result = command.ExecuteNonQuery();
+                    connection.Close();
+                    if (result > 0)
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                if (connection.State.Equals("Open"))
+                    connection.Close();
+            }
+        }
+        /// <summary>
+        /// Deletes the contact.
+        /// </summary>
+        /// <param name="firstName">The first name.</param>
+        /// <param name="lastName">The last name.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static bool DeleteContact(string firstName, string lastName)
+        {
+            DBConnection dbc = new DBConnection();
+            connection = dbc.GetConnection();
+            try
+            {
+                using (connection)
+                {
+                    connection.Open();
+                    string query = $@"delete from dbo.AddressBook where first_name='{firstName}' and last_name='{lastName}'";
                     SqlCommand command = new SqlCommand(query, connection);
                     var result = command.ExecuteNonQuery();
                     connection.Close();

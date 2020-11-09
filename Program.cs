@@ -7,7 +7,8 @@ namespace AddressBookAdo.net
         static void Main(string[] args)
         {
 
-            AddressBookRepository.EditContactUsingName("Akash", "Singh", "40/879");
+            AddressBookRepository.DeleteContact("Naveen", "Gupt");
+
             AddressBookRepository.GetAllContacts();
         }
     }
