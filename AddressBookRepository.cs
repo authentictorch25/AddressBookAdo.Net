@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 
@@ -7,8 +8,12 @@ namespace AddressBookAdo.net
 {
     public class AddressBookRepository
     {
+        //Initialising connection variable to store connection for each function
          public static SqlConnection connection { get; set; }
-
+        /// <summary>
+        /// Gets all contacts.
+        /// </summary>
+        /// <exception cref="Exception"></exception>
         public static void GetAllContacts()
         {
             //Creates a new connection for every method to avoid "ConnectionString property not initialized" exception
@@ -46,6 +51,53 @@ namespace AddressBookAdo.net
                         Console.WriteLine("No data found");
                     }
                     reader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                if (connection.State.Equals("Open"))
+                    connection.Close();
+            }
+        }
+        /// <summary>
+        /// Adds the contact.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static bool AddContact(AddressBookModel model)
+        {
+            DBConnection dbc = new DBConnection();
+            connection = dbc.GetConnection();
+            try
+            {
+                using (connection)
+                {
+                    SqlCommand command = new SqlCommand("dbo.spAddContactDetails", connection);
+                    //To execute stored procedure convrting to commandtext
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@firstname", model.firstName);
+                    command.Parameters.AddWithValue("@lastname", model.lastName);
+                    command.Parameters.AddWithValue("@address", model.address);
+                    command.Parameters.AddWithValue("@city", model.city);
+                    command.Parameters.AddWithValue("@state", model.state);
+                    command.Parameters.AddWithValue("@zip", model.zip);
+                    command.Parameters.AddWithValue("@phoneNo", model.phoneNumber);
+                    command.Parameters.AddWithValue("@email", model.email);
+                    command.Parameters.AddWithValue("@addressbookname", model.addressBookName);
+                    command.Parameters.AddWithValue("@contactType", model.contactType);
+                    connection.Open();
+                    var result = command.ExecuteNonQuery();
+                    connection.Close();
+                    if (result != 0)
+                    {
+                        return true;
+                    }
+                    return false;
                 }
             }
             catch (Exception ex)
