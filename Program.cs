@@ -7,9 +7,9 @@ namespace AddressBookAdo.net
         static void Main(string[] args)
         {
 
-            AddressBookRepository.DeleteContact("Naveen", "Gupt");
+            AddressBookRepository.GetContactByCityOrState("Waidhan", "MadhyaPradesh");
 
-            AddressBookRepository.GetAllContacts();
+
         }
     }
 }
