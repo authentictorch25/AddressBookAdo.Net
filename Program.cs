@@ -6,20 +6,8 @@ namespace AddressBookAdo.net
     {
         static void Main(string[] args)
         {
-           
-            AddressBookModel model = new AddressBookModel();
-            model.firstName = "Naveen";
-            model.lastName = "Gupt";
-            model.address = "40/458";
-            model.city = "Gorakhpur";
-            model.state = "UttarPradesh";
-            model.zip = 458958;
-            model.phoneNumber = 9587685632;
-            model.addressBookName = "frquent";
-            model.contactType = "friends";
-            model.email = "naveen@gmail.com";
 
-            AddressBookRepository.AddContact(model);
+            AddressBookRepository.EditContactUsingName("Akash", "Singh", "40/879");
             AddressBookRepository.GetAllContacts();
         }
     }

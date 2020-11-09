@@ -110,5 +110,43 @@ namespace AddressBookAdo.net
                     connection.Close();
             }
         }
+        /// <summary>
+        /// Edits the name of the contact using.
+        /// </summary>
+        /// <param name="firstName">The first name.</param>
+        /// <param name="lastName">The last name.</param>
+        /// <param name="address">The address.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static bool EditContactUsingName(string firstName, string lastName, string address)
+        {
+            DBConnection dbc = new DBConnection();
+            connection = dbc.GetConnection();
+            try
+            {
+                using (connection)
+                {
+                    connection.Open();
+                    string query = $@"update dbo.AddressBook set address='{address}' where first_name='{firstName}' and last_name='{lastName}'";
+                    SqlCommand command = new SqlCommand(query, connection);
+                    var result = command.ExecuteNonQuery();
+                    connection.Close();
+                    if (result > 0)
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                if (connection.State.Equals("Open"))
+                    connection.Close();
+            }
+        }
     }
 }
